@@ -30,6 +30,11 @@ module.exports = {
   },
   resolve: {
     extensions: ['.css', '.tsx', '.ts', '.jsx', '.js'],
+    alias: {
+      '@libs': path.resolve(__dirname, 'libs/'),
+      '@src': path.resolve(__dirname, 'src/'),
+      '@store': path.resolve(__dirname, 'src/store/'),
+    },
   },
   optimization: {
     minimize: process.env.NODE_ENV === 'production',

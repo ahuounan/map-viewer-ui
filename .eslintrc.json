@@ -31,6 +31,10 @@
           "caseInsensitive": false
         }
       }
-    ]
+    ],
+    "import/newline-after-import": ["error", { "count": 1 }]
+  },
+  "settings": {
+    "import/internal-regex": "^@.+/.*$"
   }
 }

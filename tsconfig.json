@@ -2,7 +2,13 @@
   "compilerOptions": {
     "noEmit": true,
     "strict": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@libs/*": ["libs/*"],
+      "@src/*": ["src/*"],
+      "@store/*": ["src/store/*"]
+    }
   },
   "include": ["src/", "libs/"],
   "exclude": ["node_modules"]
