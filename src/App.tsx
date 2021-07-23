@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { RootState } from './store/root';
+import { RootState } from './store/types';
+
 
 export function App(): JSX.Element {
   const dispatch = useDispatch();

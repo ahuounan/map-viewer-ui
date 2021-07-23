@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 
-export const rootEpic = combineEpics();
-export const rootReducer = combineReducers({});
+import { MapEpics } from './map/epics';
 
-export type RootState = ReturnType<typeof rootReducer>;
+export const rootEpic = combineEpics(...MapEpics);
+export const rootReducer = combineReducers({});
