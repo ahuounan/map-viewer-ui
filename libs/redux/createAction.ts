@@ -1,4 +1,4 @@
-import { Action, ActionWithoutPayload, ActionWithPayload } from './types';
+import { ActionWithoutPayload, ActionWithPayload } from './action';
 
 export function createAction<T extends string>(
   type: T
@@ -10,6 +10,9 @@ export function createAction<T extends string, P>(
 export function createAction<T extends string, P>(
   type: T,
   payload?: P
-): Action<T, P> {
-  return payload === undefined ? { type } : { type, payload };
+): ActionWithoutPayload<T> | ActionWithPayload<T, P> {
+  if (payload === undefined) {
+    return { type };
+  }
+  return { type, payload };
 }

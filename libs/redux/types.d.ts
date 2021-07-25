@@ -1,16 +1,16 @@
-export interface ActionWithoutPayload<T extends string> {
-  type: T;
+export type FetchStatus = 'idle' | 'fetching';
+
+export interface FetchedDataState<D> {
+  fetchStatus: FetchStatus;
+  error: FetchedDataError | null;
+  data: FetchedDataNormalized<D> | null;
 }
 
-export interface ActionWithPayload<T extends string, P>
-  extends ActionWithoutPayload<T> {
-  payload: P;
+export interface FetchedDataNormalized<T> {
+  ids: string[];
+  entities: FetchedDataEntities<T>;
 }
 
-export type Action<T extends string, P> =
-  | ActionWithoutPayload<T>
-  | ActionWithPayload<T, P>;
+export type FetchedDataEntities<T> = Record<string, T>;
 
-export type ActionMap = Record<string, (...params: any[]) => any>;
-
-export type ActionsUnion<A extends ActionMap> = ReturnType<A[keyof A]>;
+export type FetchedDataError = string;

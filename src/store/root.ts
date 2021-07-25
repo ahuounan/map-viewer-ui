@@ -1,7 +1,9 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 
-import { MapEpics } from './map/epics';
+import { featureEpics, featureReducer } from './feature';
 
-export const rootEpic = combineEpics(...MapEpics);
-export const rootReducer = combineReducers({});
+export const rootEpic = combineEpics(...featureEpics);
+export const rootReducer = combineReducers({
+  feature: featureReducer,
+});

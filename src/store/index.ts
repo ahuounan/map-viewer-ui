@@ -1,16 +1,15 @@
-import { Action, applyMiddleware, createStore, Store } from 'redux';
+import { applyMiddleware, createStore, Store } from 'redux';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import { createEpicMiddleware } from 'redux-observable';
 
 import { rootEpic, rootReducer } from './root';
-import { RootState } from './types';
-
+import { RootActions, RootState } from './types';
 
 const epicMiddleware = createEpicMiddleware();
 
 export function configureStore(
-  preloadedState: RootState = {}
-): Store<RootState, Action> {
+  preloadedState?: RootState
+): Store<RootState, RootActions> {
   const middlewareEnhancer = applyMiddleware(epicMiddleware);
   const composedEnhancers = composeWithDevTools(middlewareEnhancer);
 
