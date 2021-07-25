@@ -34,6 +34,7 @@ module.exports = {
       '@libs': path.resolve(__dirname, 'libs/'),
       '@src': path.resolve(__dirname, 'src/'),
       '@store': path.resolve(__dirname, 'src/store/'),
+      '@components': path.resolve(__dirname, 'src/components/'),
     },
   },
   optimization: {
