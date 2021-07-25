@@ -1,10 +1,11 @@
+import { Identifiable } from '@libs/types/Identifiable';
+
+import { Geometry } from './geometry';
+
 /**
  * Typing of geojson objects based on the spec at
  * https://geojson.org/geojson-spec.html
  */
-
-import { Identifiable } from './Identifiable';
-import { Geometry } from './geometry';
 
 export interface Feature extends Identifiable {
   type: 'Feature';

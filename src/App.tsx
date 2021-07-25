@@ -1,20 +1,35 @@
 import * as React from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { RootState } from './store/types';
-
+import { Loadable } from '@components/Loadable';
+import { compareIdentifiableArray } from '@libs/compare';
+import { featureActions } from '@store/feature';
+import { featureSelectors } from '@store/feature/selectors';
+import { useDispatch } from '@store/hooks';
 
 export function App(): JSX.Element {
+  return <FeatureList />;
+}
+
+function FeatureList() {
   const dispatch = useDispatch();
-  const state = useSelector<RootState, string>(state => 'test');
+  React.useEffect(() => {
+    dispatch(featureActions.fetchRequest());
+  }, []);
+
+  const data = useSelector(featureSelectors.data, compareIdentifiableArray);
+  const status = useSelector(featureSelectors.fetchStatus);
+  const error = useSelector(featureSelectors.error);
 
   return (
     <div className="text-lg">
-      This is the app.
-      {state}
-      <button onClick={() => dispatch({ type: 'test', payload: 'test' })}>
-        click
-      </button>
+      <Loadable loading={status !== 'idle'} error={error} data={data}>
+        <div>
+          {data?.map(feature => (
+            <div key={feature.id}>{feature.id}</div>
+          ))}
+        </div>
+      </Loadable>
     </div>
   );
 }
