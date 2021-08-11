@@ -23,7 +23,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
+        include: [/src/, /libs/, /node_modules\/mapbox-gl/],
         use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
       },
     ],
@@ -35,13 +35,59 @@ module.exports = {
       '@src': path.resolve(__dirname, 'src/'),
       '@store': path.resolve(__dirname, 'src/store/'),
       '@components': path.resolve(__dirname, 'src/components/'),
+      '@layouts': path.resolve(__dirname, 'src/layouts/'),
     },
   },
   optimization: {
     minimize: process.env.NODE_ENV === 'production',
+    splitChunks:
+      process.env.NODE_ENV === 'production'
+        ? {
+            chunks: 'async',
+            minSize: 20000,
+            minRemainingSize: 0,
+            minChunks: 1,
+            maxAsyncRequests: 30,
+            maxInitialRequests: 30,
+            enforceSizeThreshold: 50000,
+            cacheGroups: {
+              defaultVendors: {
+                test: /[\\/]node_modules[\\/]/,
+                name: 'vendors',
+                chunks: 'all',
+                enforce: true,
+                reuseExistingChunk: true,
+                priority: -10,
+              },
+              react: {
+                test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+                name: 'react',
+                chunks: 'all',
+                enforce: true,
+                reuseExistingChunk: true,
+              },
+              mapboxgl: {
+                test: /[\\/]node_modules[\\/](mapbox-gl)[\\/]/,
+                name: 'mapboxgl',
+                chunks: 'all',
+                enforce: true,
+                reuseExistingChunk: true,
+              },
+              default: {
+                minChunks: 2,
+                priority: -20,
+                reuseExistingChunk: true,
+              },
+            },
+          }
+        : undefined,
   },
   plugins: [
-    new HtmlWebpackPlugin({ template: './template/index.html' }),
+    new HtmlWebpackPlugin({
+      template: './template/index.html',
+      inject: true,
+      scriptLoading: 'defer',
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].bundle.css',
       chunkFilename: '[id].css',
