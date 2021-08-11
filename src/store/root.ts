@@ -1,9 +1,11 @@
 import { combineReducers } from 'redux';
 import { combineEpics } from 'redux-observable';
 
-import { featureEpics, featureReducer } from './feature';
+import { boatRampEpics, boatRampReducer } from './boatRamp';
+import { viewPortReducer } from './viewport';
 
-export const rootEpic = combineEpics(...featureEpics);
+export const rootEpic = combineEpics(...boatRampEpics);
 export const rootReducer = combineReducers({
-  feature: featureReducer,
+  boatRamp: boatRampReducer,
+  viewPort: viewPortReducer,
 });

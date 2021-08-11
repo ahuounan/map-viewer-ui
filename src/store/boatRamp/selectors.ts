@@ -1,14 +1,14 @@
+import { Feature } from 'geojson';
 import { createSelector } from 'reselect';
 
-import { Feature } from '@libs/geojson/feature';
 import { FetchStatus, FetchedDataError } from '@libs/redux/types';
 
 import { RootState } from '../types';
 
 import { denormalize } from './transformers';
-import { FeatureState } from './types';
+import { BoatRampState } from './types';
 
-const selector = (state: RootState): FeatureState => state.feature;
+const selector = (state: RootState): BoatRampState => state.boatRamp;
 
 const fetchStatusSelector = (state: RootState): FetchStatus | null =>
   selector(state).fetchStatus;
@@ -17,10 +17,10 @@ const errorSelector = (state: RootState): FetchedDataError | null =>
   selector(state).error;
 
 const idsSelector = (state: RootState): string[] | null =>
-  selector(state).data?.ids ?? null;
+  selector(state)?.ids ?? null;
 
 const entitiesSelector = (state: RootState): Record<string, Feature> | null =>
-  selector(state).data?.entities ?? null;
+  selector(state)?.entities ?? null;
 
 // Memoized state-only selector
 const dataSelector = createSelector(
@@ -38,7 +38,7 @@ const makeDataByIdSelector = () =>
     (entities, id) => entities?.[id] ?? null
   );
 
-export const featureSelectors = {
+export const boatRampSelectors = {
   state: selector,
   fetchStatus: fetchStatusSelector,
   error: errorSelector,
