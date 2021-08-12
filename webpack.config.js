@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -29,14 +30,8 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['.css', '.tsx', '.ts', '.jsx', '.js'],
-    alias: {
-      '@libs': path.resolve(__dirname, 'libs/'),
-      '@src': path.resolve(__dirname, 'src/'),
-      '@store': path.resolve(__dirname, 'src/store/'),
-      '@components': path.resolve(__dirname, 'src/components/'),
-      '@layouts': path.resolve(__dirname, 'src/layouts/'),
-    },
+    extensions: ['.css', '.tsx', '.ts', '.jsx', '.js', '.d.ts'],
+    plugins: [new TsconfigPathsPlugin()],
   },
   optimization: {
     minimize: process.env.NODE_ENV === 'production',
