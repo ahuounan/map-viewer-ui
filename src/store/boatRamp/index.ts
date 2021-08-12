@@ -2,3 +2,4 @@ export { boatRampActions } from './actions';
 export { boatRampEpics } from './epics';
 export { boatRampReducer } from './reducer';
 export { boatRampSelectors } from './selectors';
+export type { BoatRampState } from './types';

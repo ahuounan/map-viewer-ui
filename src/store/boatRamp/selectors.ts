@@ -1,7 +1,7 @@
-import { Feature } from 'geojson';
+import { Feature, Point } from 'geojson';
 import { createSelector } from 'reselect';
 
-import { FetchStatus, FetchedDataError } from '@libs/redux/types';
+import { FetchStatus, FetchedDataError } from '@libs/redux/templates/fetched';
 
 import { RootState } from '../types';
 
@@ -19,12 +19,22 @@ const errorSelector = (state: RootState): FetchedDataError | null =>
 const idsSelector = (state: RootState): string[] | null =>
   selector(state)?.ids ?? null;
 
-const entitiesSelector = (state: RootState): Record<string, Feature> | null =>
-  selector(state)?.entities ?? null;
+const visibleIdsSelector = (state: RootState): string[] | null =>
+  selector(state)?.visibleIds ?? null;
+
+const entitiesSelector = (
+  state: RootState
+): Record<string, Feature<Point>> | null => selector(state)?.entities ?? null;
 
 // Memoized state-only selector
 const dataSelector = createSelector(
   idsSelector,
+  entitiesSelector,
+  (ids, entities) =>
+    ids === null || entities === null ? null : denormalize(ids, entities)
+);
+const visibleDataSelector = createSelector(
+  visibleIdsSelector,
   entitiesSelector,
   (ids, entities) =>
     ids === null || entities === null ? null : denormalize(ids, entities)
@@ -37,12 +47,20 @@ const makeDataByIdSelector = () =>
     (_: RootState, id: string) => id,
     (entities, id) => entities?.[id] ?? null
   );
+const makeDataByIdsSelector = () =>
+  createSelector(
+    entitiesSelector,
+    (_: RootState, ids: string[]) => ids,
+    (entities, ids) => ids.map(id => entities?.[id] ?? null)
+  );
 
 export const boatRampSelectors = {
   state: selector,
   fetchStatus: fetchStatusSelector,
   error: errorSelector,
   data: dataSelector,
-  dataById: makeDataByIdSelector,
+  visibleData: visibleDataSelector,
+  makeDataById: makeDataByIdSelector,
+  makeDataByIds: makeDataByIdsSelector,
   entities: entitiesSelector,
 };

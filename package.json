@@ -2,12 +2,15 @@
   "name": "map-viewer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.tsx",
   "sideEffects": [
     "*.css"
   ],
   "dependencies": {
+    "@turf/turf": "6.5.0",
     "immer": "9.0.5",
+    "lodash.flatten": "4.4.0",
+    "lodash.isequal": "4.5.0",
     "mapbox-gl": "2.3.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -16,7 +19,8 @@
     "redux": "4.1.0",
     "redux-observable": "2.0.0",
     "reselect": "4.0.0",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "uuid": "8.3.2"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
@@ -27,8 +31,11 @@
     "@testing-library/dom": "8.1.0",
     "@testing-library/react": "12.0.0",
     "@types/geojson": "7946.0.8",
+    "@types/lodash.flatten": "4.4.6",
+    "@types/lodash.isequal": "4.5.5",
     "@types/mapbox-gl": "2.3.3",
     "@types/react-dom": "17.0.9",
+    "@types/uuid": "8.3.1",
     "@typescript-eslint/eslint-plugin": "4.28.4",
     "@typescript-eslint/parser": "4.28.4",
     "autoprefixer": "10.3.1",

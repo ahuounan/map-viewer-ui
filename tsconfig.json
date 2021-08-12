@@ -3,13 +3,15 @@
     "noEmit": true,
     "strict": true,
     "jsx": "preserve",
+    "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
       "@libs/*": ["libs/*"],
       "@src/*": ["src/*"],
       "@store/*": ["src/store/*"],
       "@components/*": ["src/components/*"],
-      "@layouts/*": ["src/layouts/*"]
+      "@pages/*": ["src/pages/*"],
+      "@containers/*": ["src/containers/*"]
     }
   },
   "include": ["src/", "libs/"],

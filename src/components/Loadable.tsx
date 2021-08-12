@@ -9,7 +9,11 @@ interface Props {
 }
 
 function DefaultLoader(): JSX.Element {
-  return <div>Loading...</div>;
+  return (
+    <div className="inset-0 flex justify-center items-center absolute">
+      Loading...
+    </div>
+  );
 }
 
 export function Loadable(props: Props): JSX.Element {

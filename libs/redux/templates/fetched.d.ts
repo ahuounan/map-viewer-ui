@@ -6,8 +6,3 @@ export interface FetchedDataState {
 }
 
 export type FetchedDataError = string;
-
-export interface NormalizedData<T> {
-  ids: string[];
-  entities: Record<string, T>;
-}

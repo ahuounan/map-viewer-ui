@@ -9,6 +9,7 @@ const initialState: BoatRampState = {
   error: null,
   ids: [],
   entities: {},
+  visibleIds: [],
 };
 
 export function boatRampReducer(
@@ -32,6 +33,11 @@ export function boatRampReducer(
         const { ids, entities } = normalize(action.payload);
         draft.ids = ids;
         draft.entities = entities;
+      });
+    }
+    case BoatRampActionTypes.SET_VISIBLE: {
+      return produce(state, (draft: BoatRampState) => {
+        draft.visibleIds = action.payload;
       });
     }
     default: {

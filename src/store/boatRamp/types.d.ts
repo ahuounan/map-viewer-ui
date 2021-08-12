@@ -1,9 +1,12 @@
-import { Feature, FeatureCollection } from 'geojson';
+import { Feature, FeatureCollection, MultiPolygon, Point } from 'geojson';
 
-import { FetchedDataState, NormalizedData } from '@libs/redux/types';
+import { FetchedDataState } from '@libs/redux/templates/fetched';
+import { NormalizedDataState } from '@libs/redux/templates/normalized';
 
 export interface BoatRampState
   extends FetchedDataState,
-    NormalizedData<Feature> {}
+    NormalizedDataState<Feature<Point>> {
+  visibleIds: string[];
+}
 
-export type BoatRampFetchResponse = FeatureCollection;
+export type BoatRampFetchResponse = FeatureCollection<MultiPolygon>;
