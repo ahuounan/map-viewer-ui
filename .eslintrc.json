@@ -4,10 +4,15 @@
   },
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "eslint-plugin-import"],
+  "plugins": [
+    "@typescript-eslint",
+    "eslint-plugin-react-hooks",
+    "eslint-plugin-import"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
     "plugin:jest/recommended",
     "prettier"
   ],
