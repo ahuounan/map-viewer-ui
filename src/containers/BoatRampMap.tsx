@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux';
 
 import { boatRampActions, boatRampSelectors } from '@src/store/boatRamp';
 import { useDispatch } from '@src/store/hooks';
+import { sessionActions, sessionSelectors } from '@src/store/session';
 import { viewportActions } from '@src/store/viewport';
 import { viewportSelectors } from '@src/store/viewport/selectors';
 
@@ -24,10 +25,12 @@ export function BoatRampMap(): JSX.Element {
   const status = useSelector(boatRampSelectors.fetchStatus);
   const error = useSelector(boatRampSelectors.error);
   const viewPort = useSelector(viewportSelectors.view, isEqual);
+  const token = useSelector(sessionSelectors.token);
   const mapRef = React.useRef<MapRef>(null);
 
   React.useEffect(() => {
     dispatch(boatRampActions.fetchRequest());
+    dispatch(sessionActions.fetchRequest());
   }, [dispatch]);
 
   const handleViewStateChange = React.useCallback(
@@ -56,9 +59,10 @@ export function BoatRampMap(): JSX.Element {
   );
 
   return (
-    <Loadable loading={status !== 'idle'} error={error} data={data}>
+    <Loadable loading={status !== 'idle'} error={error} data={data && token}>
       <ReactMapGL
         key="boat-ramps"
+        mapboxApiAccessToken={token ?? undefined}
         width="100%"
         height="100%"
         ref={mapRef}
