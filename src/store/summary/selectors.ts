@@ -22,19 +22,22 @@ const visibleDataSelector = createDeepEqualSelector(
 const materialsDataSelector = createDeepEqualSelector(
   visibleDataSelector,
   data =>
-    data?.features.reduce((acc: Record<string, number>, feat) => {
+    data?.features.reduce((acc: Record<string, number> | null, feat) => {
       if (
         feat.properties.material === null ||
         feat.properties.material === undefined
       ) {
         return acc;
       }
+      if (!acc) {
+        acc = {};
+      }
       if (!acc[feat.properties.material]) {
         acc[feat.properties.material] = 0;
       }
       acc[feat.properties.material]++;
       return acc;
-    }, {})
+    }, null)
 );
 
 export const summarySelectors = {
