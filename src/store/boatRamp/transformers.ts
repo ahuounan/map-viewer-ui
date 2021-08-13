@@ -5,12 +5,12 @@ import { v4 } from 'uuid';
 import { NormalizedDataState } from '@libs/redux/templates/normalized';
 import * as turf from '@turf/turf';
 
-import { BoatRampFetchResponse } from './types';
+import { BoatRampFetchResponse, BoatRampProperties } from './types';
 
 export function normalize(
   input: BoatRampFetchResponse
-): NormalizedDataState<Feature<Point>> {
-  const result: NormalizedDataState<Feature<Point>> = {
+): NormalizedDataState<Feature<Point, BoatRampProperties>> {
+  const result: NormalizedDataState<Feature<Point, BoatRampProperties>> = {
     ids: [],
     entities: {},
   };
@@ -33,8 +33,8 @@ export function normalize(
 
 export function denormalize(
   ids: string[],
-  entities: Record<string, Feature<Point>>
-): FeatureCollection<Point> {
+  entities: Record<string, Feature<Point, BoatRampProperties>>
+): FeatureCollection<Point, BoatRampProperties> {
   return {
     type: 'FeatureCollection',
     features: ids.map(id => entities[id]),

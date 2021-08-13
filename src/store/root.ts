@@ -3,6 +3,7 @@ import { combineEpics } from 'redux-observable';
 
 import { boatRampEpics, boatRampReducer } from './boatRamp';
 import { sessionEpics, sessionReducer } from './session';
+import { summaryReducer } from './summary';
 import { viewportReducer } from './viewport';
 
 export const rootEpic = combineEpics<AnyAction>(
@@ -13,4 +14,5 @@ export const rootReducer = combineReducers({
   boatRamp: boatRampReducer,
   viewport: viewportReducer,
   session: sessionReducer,
+  summary: summaryReducer,
 });

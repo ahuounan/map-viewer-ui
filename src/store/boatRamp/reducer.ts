@@ -29,15 +29,10 @@ export function boatRampReducer(
     }
     case BoatRampActionTypes.FETCH_RESPONSE: {
       return produce(state, (draft: BoatRampState) => {
-        draft.fetchStatus = 'idle';
         const { ids, entities } = normalize(action.payload);
+        draft.fetchStatus = 'idle';
         draft.ids = ids;
         draft.entities = entities;
-      });
-    }
-    case BoatRampActionTypes.SET_VISIBLE: {
-      return produce(state, (draft: BoatRampState) => {
-        draft.visibleIds = action.payload;
       });
     }
     default: {

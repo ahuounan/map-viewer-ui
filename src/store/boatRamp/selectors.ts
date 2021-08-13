@@ -1,5 +1,4 @@
 import { Feature, Point } from 'geojson';
-import { createSelector } from 'reselect';
 
 import { FetchStatus, FetchedDataError } from '@libs/redux/templates/fetched';
 import { createDeepEqualSelector } from '@libs/reselect/createDeepEqualSelector';
@@ -7,7 +6,7 @@ import { createDeepEqualSelector } from '@libs/reselect/createDeepEqualSelector'
 import { RootState } from '../types';
 
 import { denormalize } from './transformers';
-import { BoatRampState } from './types';
+import { BoatRampProperties, BoatRampState } from './types';
 
 const selector = (state: RootState): BoatRampState => state.boatRamp;
 
@@ -20,22 +19,14 @@ const errorSelector = (state: RootState): FetchedDataError | null =>
 const idsSelector = (state: RootState): string[] | null =>
   selector(state)?.ids ?? null;
 
-const visibleIdsSelector = (state: RootState): string[] | null =>
-  selector(state)?.visibleIds ?? null;
-
 const entitiesSelector = (
   state: RootState
-): Record<string, Feature<Point>> | null => selector(state)?.entities ?? null;
+): Record<string, Feature<Point, BoatRampProperties>> | null =>
+  selector(state)?.entities ?? null;
 
 // Memoized state-only selector
 const dataSelector = createDeepEqualSelector(
   idsSelector,
-  entitiesSelector,
-  (ids, entities) =>
-    ids === null || entities === null ? null : denormalize(ids, entities)
-);
-const visibleDataSelector = createSelector(
-  visibleIdsSelector,
   entitiesSelector,
   (ids, entities) =>
     ids === null || entities === null ? null : denormalize(ids, entities)
@@ -60,7 +51,6 @@ export const boatRampSelectors = {
   fetchStatus: fetchStatusSelector,
   error: errorSelector,
   data: dataSelector,
-  visibleData: visibleDataSelector,
   makeDataById: makeDataByIdSelector,
   makeDataByIds: makeDataByIdsSelector,
   entities: entitiesSelector,
