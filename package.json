@@ -8,6 +8,11 @@
   ],
   "dependencies": {
     "@turf/turf": "6.5.0",
+    "@visx/axis": "1.17.1",
+    "@visx/gradient": "1.7.0",
+    "@visx/group": "1.17.1",
+    "@visx/scale": "1.14.0",
+    "@visx/shape": "1.17.1",
     "clsx": "1.1.1",
     "immer": "9.0.5",
     "lodash.flatten": "4.4.0",

@@ -26,6 +26,7 @@ export function BoatRampMap(): JSX.Element {
   const data = useSelector(boatRampSelectors.data, isEqual);
   const status = useSelector(boatRampSelectors.fetchStatus);
   const error = useSelector(boatRampSelectors.error);
+  const filter = useSelector(boatRampSelectors.filter);
   const viewPort = useSelector(viewportSelectors.view, isEqual);
   const token = useSelector(sessionSelectors.token);
   const mapRef = React.useRef<MapRef>(null);
@@ -88,7 +89,7 @@ export function BoatRampMap(): JSX.Element {
         {data ? (
           <>
             <Source {...sourceProps} data={data}>
-              <Layer {...layerProps} />
+              <Layer {...layerProps} filter={filter ?? undefined} />
             </Source>
           </>
         ) : null}

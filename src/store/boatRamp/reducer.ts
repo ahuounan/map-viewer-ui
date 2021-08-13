@@ -9,7 +9,7 @@ const initialState: BoatRampState = {
   error: null,
   ids: [],
   entities: {},
-  visibleIds: [],
+  filter: null,
 };
 
 export function boatRampReducer(

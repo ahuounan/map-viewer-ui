@@ -1,4 +1,5 @@
 import { Feature, Point } from 'geojson';
+import { LayerProps } from 'react-map-gl';
 
 import { FetchStatus, FetchedDataError } from '@libs/redux/templates/fetched';
 import { createDeepEqualSelector } from '@libs/reselect/createDeepEqualSelector';
@@ -23,6 +24,9 @@ const entitiesSelector = (
   state: RootState
 ): Record<string, Feature<Point, BoatRampProperties>> | null =>
   selector(state)?.entities ?? null;
+
+const filterSelector = (state: RootState): LayerProps['filter'] | null =>
+  selector(state)?.filter ?? null;
 
 // Memoized state-only selector
 const dataSelector = createDeepEqualSelector(
@@ -51,6 +55,7 @@ export const boatRampSelectors = {
   fetchStatus: fetchStatusSelector,
   error: errorSelector,
   data: dataSelector,
+  filter: filterSelector,
   makeDataById: makeDataByIdSelector,
   makeDataByIds: makeDataByIdsSelector,
   entities: entitiesSelector,

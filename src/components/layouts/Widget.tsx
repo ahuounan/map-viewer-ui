@@ -27,8 +27,8 @@ export function Widget(props: Props): JSX.Element {
 
 const styles = {
   container: (containerClassName?: string) =>
-    clsx('absolute', 'z-10', 'overflow-scroll', containerClassName),
-  header: clsx('flex', 'justify-between', 'm-2'),
+    clsx('overflow-scroll', containerClassName),
+  header: clsx('flex', 'justify-between', 'my-2'),
   headerText: clsx(),
   content: (collapsed: boolean) =>
     clsx(
