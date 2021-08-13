@@ -82,6 +82,8 @@ export function BoatRampMap(): JSX.Element {
         onLoad={handleLoad}
         onViewStateChange={handleViewStateChange}
         {...viewPort}
+        width="100%"
+        height="100%"
       >
         {data ? (
           <>
