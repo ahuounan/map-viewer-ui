@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import * as React from 'react';
 
 interface Props {
@@ -9,12 +10,19 @@ interface Props {
 }
 
 function DefaultLoader(): JSX.Element {
-  return (
-    <div className="inset-0 flex justify-center items-center absolute">
-      Loading...
-    </div>
-  );
+  return <div className={styles.container}>Loading...</div>;
 }
+
+const styles = {
+  container: clsx(
+    'inset-0',
+    'flex',
+    'justify-center',
+    'items-center',
+    'absolute',
+    'bg-gray-100'
+  ),
+};
 
 export function Loadable(props: Props): JSX.Element {
   const { Loader = DefaultLoader, loading, error, data, children } = props;
