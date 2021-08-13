@@ -1,6 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const path = require('path');
 
 module.exports = {
@@ -87,5 +88,14 @@ module.exports = {
       filename: '[name].bundle.css',
       chunkFilename: '[id].css',
     }),
+    ...(process.env.NODE_ENV === 'production'
+      ? [
+          new CompressionPlugin({
+            test: /\.(js|css|html)(\?.*)?$/i,
+            filename: '[path][base].gz',
+            deleteOriginalAssets: true,
+          }),
+        ]
+      : []),
   ],
 };
