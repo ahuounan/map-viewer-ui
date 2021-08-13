@@ -2,6 +2,7 @@ import { Feature, Point } from 'geojson';
 import { createSelector } from 'reselect';
 
 import { FetchStatus, FetchedDataError } from '@libs/redux/templates/fetched';
+import { createDeepEqualSelector } from '@libs/reselect/createDeepEqualSelector';
 
 import { RootState } from '../types';
 
@@ -27,7 +28,7 @@ const entitiesSelector = (
 ): Record<string, Feature<Point>> | null => selector(state)?.entities ?? null;
 
 // Memoized state-only selector
-const dataSelector = createSelector(
+const dataSelector = createDeepEqualSelector(
   idsSelector,
   entitiesSelector,
   (ids, entities) =>
@@ -42,13 +43,13 @@ const visibleDataSelector = createSelector(
 
 // Memoized state and props selector
 const makeDataByIdSelector = () =>
-  createSelector(
+  createDeepEqualSelector(
     entitiesSelector,
     (_: RootState, id: string) => id,
     (entities, id) => entities?.[id] ?? null
   );
 const makeDataByIdsSelector = () =>
-  createSelector(
+  createDeepEqualSelector(
     entitiesSelector,
     (_: RootState, ids: string[]) => ids,
     (entities, ids) => ids.map(id => entities?.[id] ?? null)
