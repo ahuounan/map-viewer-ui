@@ -1,6 +1,6 @@
-import { Feature, Point } from 'geojson';
+import clsx from 'clsx';
+import { Feature } from 'geojson';
 import isEqual from 'lodash.isequal';
-import uniq from 'lodash.uniq';
 import React from 'react';
 import ReactMapGL, {
   Source,
@@ -12,72 +12,87 @@ import ReactMapGL, {
 import { ViewState } from 'react-map-gl/src/mapbox/mapbox';
 import { useSelector } from 'react-redux';
 
+import { MapApi } from '@libs/mapbox-gl/types';
 import { boatRampActions, boatRampSelectors } from '@src/store/boatRamp';
 import { useDispatch } from '@src/store/hooks';
-import { sessionActions, sessionSelectors } from '@src/store/session';
-import { summaryActions } from '@src/store/summary';
-import { viewportActions } from '@src/store/viewport';
-import { viewportSelectors } from '@src/store/viewport/selectors';
+import { mapActions, mapSelectors } from '@src/store/map';
+import { sessionSelectors } from '@src/store/session';
 
 import { Loadable } from '../components/Loadable';
 
 export function BoatRampMap(): JSX.Element {
   const dispatch = useDispatch();
-  const data = useSelector(boatRampSelectors.data, isEqual);
-  const status = useSelector(boatRampSelectors.fetchStatus);
-  const error = useSelector(boatRampSelectors.error);
-  const filter = useSelector(boatRampSelectors.filter);
-  const viewPort = useSelector(viewportSelectors.view, isEqual);
-  const token = useSelector(sessionSelectors.token);
   const mapRef = React.useRef<MapRef>(null);
 
-  React.useEffect(() => {
-    dispatch(boatRampActions.fetchRequest());
-    dispatch(sessionActions.fetchRequest());
-  }, [dispatch]);
+  const token = useSelector(sessionSelectors.mapToken);
+
+  const status = useSelector(boatRampSelectors.fetchStatus);
+  const error = useSelector(boatRampSelectors.error);
+  const data = useSelector(boatRampSelectors.data, isEqual);
+
+  const visibleIds = useSelector(mapSelectors.visibleIds);
+  const viewPort = useSelector(mapSelectors.view, isEqual);
+  const mapFilters = useSelector(mapSelectors.mapFilters, isEqual);
 
   const setViewportBounds = React.useCallback(
     (viewState: ViewState) => {
       dispatch(
-        viewportActions.set({
+        mapActions.setViewport({
           view: viewState,
-          bounds: mapRef.current?.getMap().getBounds()?.toArray() ?? null,
         })
       );
     },
     [dispatch]
   );
   const setVisibleIds = React.useCallback(() => {
-    if (mapRef.current) {
-      const map = mapRef.current.getMap();
-      const layer = map.getLayer('boat-ramps');
-      if (layer) {
-        const ids: string[] = mapRef.current
-          .getMap()
-          .queryRenderedFeatures(undefined, queryBoatRampLayerOptions)
-          .map((feature: Feature<Point>) => feature.id);
-        const uniqIds = uniq(ids);
-        dispatch(summaryActions.setVisible(uniqIds));
+    const { mapApi, boatRampLayer } = getMapApiLayer(mapRef);
+    if (boatRampLayer) {
+      const ids: string[] = mapApi
+        .queryRenderedFeatures(undefined, queryBoatRampLayerOptions)
+        .filter(feature => feature.id)
+        .map((feature: Feature) => String(feature.id));
+      if (!isEqual(ids, visibleIds)) {
+        dispatch(mapActions.setVisible(ids));
       }
     }
-  }, [dispatch]);
+  }, [dispatch, visibleIds]);
+
+  const handleSourceDataChange = React.useCallback(() => {
+    setVisibleIds();
+  }, [setVisibleIds]);
 
   const handleViewStateChange = React.useCallback(
     (event: { viewState: ViewState }) => {
       const { viewState } = event;
-      setViewportBounds(viewState);
       setVisibleIds();
+      setViewportBounds(viewState);
     },
     [setViewportBounds, setVisibleIds]
   );
+
   const handleLoad = React.useCallback(() => {
     setVisibleIds();
-  }, [setVisibleIds]);
+    const { mapApi } = getMapApiLayer(mapRef);
+    if (mapApi) {
+      mapApi.on('sourcedata', boatRampLayerId, handleSourceDataChange);
+    }
+  }, [setVisibleIds, handleSourceDataChange]);
+
+  React.useEffect(() => {
+    dispatch(boatRampActions.fetchRequest());
+  }, [dispatch]);
+
+  React.useEffect(() => {
+    const { mapApi, boatRampLayer } = getMapApiLayer(mapRef);
+    if (mapApi && boatRampLayer) {
+      mapRef.current?.getMap().setFilter(boatRampLayerId, mapFilters);
+    }
+  }, [mapFilters]);
 
   return (
     <Loadable loading={status !== 'idle'} error={error} data={data && token}>
       <ReactMapGL
-        key="boat-ramps"
+        key={boatRampLayerId}
         mapboxApiAccessToken={token ?? undefined}
         ref={mapRef}
         onLoad={handleLoad}
@@ -86,35 +101,43 @@ export function BoatRampMap(): JSX.Element {
         width="100%"
         height="100%"
       >
-        {data ? (
-          <>
-            <Source {...sourceProps} data={data}>
-              <Layer {...layerProps} filter={filter ?? undefined} />
-            </Source>
-          </>
-        ) : null}
+        {data && (
+          <Source {...sourceProps} data={data}>
+            <Layer {...layerProps} />
+          </Source>
+        )}
       </ReactMapGL>
     </Loadable>
   );
 }
 
+const boatRampLayerId = 'boat-ramps';
+
+function getMapApiLayer(mapRef: React.RefObject<MapRef>) {
+  const mapApi: MapApi = mapRef.current?.getMap();
+  const boatRampLayer = mapApi?.getLayer(boatRampLayerId);
+
+  return { mapApi, boatRampLayer };
+}
+
 const queryBoatRampLayerOptions = {
-  layers: ['boat-ramps'],
+  layers: [boatRampLayerId],
 };
 
 const sourceProps: SourceProps = {
-  id: 'boat-ramps',
+  id: boatRampLayerId,
   type: 'geojson',
   promoteId: 'id',
 };
 
 const layerProps: LayerProps = {
-  id: 'boat-ramps',
+  id: boatRampLayerId,
   type: 'circle' as const,
-  source: 'boat-ramps',
+  source: boatRampLayerId,
   paint: {
     'circle-radius': 10,
     'circle-stroke-color': '#000000',
+    'circle-opacity': 0.6,
     'circle-stroke-width': 1,
   },
 };

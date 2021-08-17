@@ -7,13 +7,11 @@ import { RootActions, RootState } from './types';
 
 const epicMiddleware = createEpicMiddleware();
 
-export function configureStore(
-  preloadedState?: RootState
-): Store<RootState, RootActions> {
+export function configureStore(): Store<RootState, RootActions> {
   const middlewareEnhancer = applyMiddleware(epicMiddleware);
   const composedEnhancers = composeWithDevTools(middlewareEnhancer);
 
-  const store = createStore(rootReducer, preloadedState, composedEnhancers);
+  const store = createStore(rootReducer, undefined, composedEnhancers);
   epicMiddleware.run(rootEpic);
 
   return store;

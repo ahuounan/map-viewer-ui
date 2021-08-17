@@ -1,16 +1,17 @@
-import { Feature, FeatureCollection, MultiPolygon, Point } from 'geojson';
+import { MultiPolygon, Point } from 'geojson';
 import flatten from 'lodash.flatten';
 import { v4 } from 'uuid';
 
 import { NormalizedDataState } from '@libs/redux/templates/normalized';
-import * as turf from '@turf/turf';
+import centerOfMass from '@turf/center-of-mass';
+import { polygon } from '@turf/helpers';
 
-import { BoatRampFetchResponse, BoatRampProperties } from './types';
+import { BoatRampFeature, BoatRampFetchResponse } from './types';
 
 export function normalize(
   input: BoatRampFetchResponse
-): NormalizedDataState<Feature<Point, BoatRampProperties>> {
-  const result: NormalizedDataState<Feature<Point, BoatRampProperties>> = {
+): NormalizedDataState<BoatRampFeature> {
+  const result: NormalizedDataState<BoatRampFeature> = {
     ids: [],
     entities: {},
   };
@@ -19,6 +20,7 @@ export function normalize(
     const id = String(feature.id) ?? v4();
     result.entities[id] = {
       ...feature,
+      id,
       geometry: convertMultiPolygonToPoint(feature.geometry),
       properties: {
         ...feature.properties,
@@ -32,17 +34,17 @@ export function normalize(
 }
 
 export function denormalize(
-  ids: string[],
-  entities: Record<string, Feature<Point, BoatRampProperties>>
-): FeatureCollection<Point, BoatRampProperties> {
-  return {
-    type: 'FeatureCollection',
-    features: ids.map(id => entities[id]),
-  };
+  ids: string[] | Set<string>,
+  entities: Record<string, BoatRampFeature>
+): BoatRampFeature[] {
+  const data: BoatRampFeature[] = [];
+  ids.forEach(id => data.push(entities[id]));
+
+  return data;
 }
 
 function convertMultiPolygonToPoint(multiPolygon: MultiPolygon): Point {
   const coordinates = flatten(multiPolygon.coordinates);
-  const turfPolygon = turf.polygon(coordinates);
-  return turf.centerOfMass(turfPolygon).geometry;
+  const turfPolygon = polygon(coordinates);
+  return centerOfMass(turfPolygon).geometry;
 }

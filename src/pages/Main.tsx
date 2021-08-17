@@ -5,8 +5,8 @@ import { FullScreen } from '@components/layouts/FullScreen';
 import { Overlay } from '@components/layouts/Overlay';
 import { Widget } from '@components/layouts/Widget';
 import { BoatRampMap } from '@containers/BoatRampMap';
-import { RampsByMaterial } from '@containers/RampsByMaterial';
-import { RampsBySize } from '@containers/RampsBySize';
+import { RampsBy } from '@containers/RampsBy';
+import { FilterType } from '@src/store/map';
 
 export function Main(): JSX.Element {
   return (
@@ -14,10 +14,10 @@ export function Main(): JSX.Element {
       <BoatRampMap />
       <Overlay>
         <Widget containerClassName={styles.widget} header="Ramps By Material">
-          <RampsByMaterial />
+          <RampsBy type={FilterType.AREA} />
         </Widget>
         <Widget containerClassName={styles.widget} header="Ramps By Size">
-          <RampsBySize />
+          <RampsBy type={FilterType.MATERIAL} />
         </Widget>
       </Overlay>
     </FullScreen>
@@ -26,6 +26,7 @@ export function Main(): JSX.Element {
 
 const styles = {
   widget: clsx(
+    'w-450px',
     'm-2',
     'inline',
     'shadow-sm',

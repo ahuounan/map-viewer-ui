@@ -1,26 +1,36 @@
-import { Epic, ofType } from 'redux-observable';
+import { Epic, ofType, StateObservable } from 'redux-observable';
 import { Observable } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { map, mergeMap, takeUntil } from 'rxjs/operators';
 
-import { Action } from '@libs/redux/action';
+import { sessionSelectors } from '../session';
+import { RootState } from '../types';
 
-import { boatRampActions, BoatRampActionTypes } from './actions';
+import {
+  BoatRampActions,
+  boatRampActions,
+  BoatRampActionTypes,
+} from './actions';
 import { BoatRampFetchResponse } from './types';
 
-const url = './data/boat_ramps.geojson';
+const url = process.env.API_HOST + '/boat-ramps';
 
-const fetch: Epic<Action<BoatRampActionTypes>> = (
-  action$: Observable<Action<BoatRampActionTypes>>
+const fetch: Epic<BoatRampActions> = (
+  action$: Observable<BoatRampActions>,
+  state$: StateObservable<RootState>
 ) =>
   action$.pipe(
     ofType(BoatRampActionTypes.FETCH_REQUEST),
     mergeMap(() =>
-      ajax.getJSON<BoatRampFetchResponse>(url).pipe(
-        map(response => boatRampActions.fetchResponse(response)),
-        takeUntil(action$.pipe(ofType(BoatRampActionTypes.FETCH_CANCELED)))
-      )
+      ajax
+        .getJSON<BoatRampFetchResponse>(url, {
+          Authorization: 'Bearer ' + sessionSelectors.token(state$.value),
+        })
+        .pipe(
+          map(response => boatRampActions.fetchResponse(response)),
+          takeUntil(action$.pipe(ofType(BoatRampActionTypes.FETCH_CANCELED)))
+        )
     )
   );
 
-export const boatRampEpics: Epic<Action<BoatRampActionTypes>>[] = [fetch];
+export const boatRampEpics: Epic<BoatRampActions>[] = [fetch];

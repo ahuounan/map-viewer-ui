@@ -9,7 +9,6 @@ const initialState: BoatRampState = {
   error: null,
   ids: [],
   entities: {},
-  filter: null,
 };
 
 export function boatRampReducer(
@@ -33,6 +32,12 @@ export function boatRampReducer(
         draft.fetchStatus = 'idle';
         draft.ids = ids;
         draft.entities = entities;
+      });
+    }
+    case BoatRampActionTypes.FETCH_ERROR: {
+      return produce(state, (draft: BoatRampState) => {
+        draft.fetchStatus = 'idle';
+        draft.error = action.payload;
       });
     }
     default: {

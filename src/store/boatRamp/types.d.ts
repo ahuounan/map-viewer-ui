@@ -1,19 +1,22 @@
 import { Feature, FeatureCollection, MultiPolygon, Point } from 'geojson';
-import { LayerProps } from 'react-map-gl';
 
 import { FetchedDataState } from '@libs/redux/templates/fetched';
 import { NormalizedDataState } from '@libs/redux/templates/normalized';
 
 export interface BoatRampState
   extends FetchedDataState,
-    NormalizedDataState<Feature<Point, BoatRampProperties>> {
-  filter: LayerProps['filter'] | null;
-}
+    NormalizedDataState<BoatRampFeature> {}
+
+export type BoatRampFeature = Feature<Point, BoatRampProperties> & {
+  id: string;
+};
 
 export type BoatRampFetchResponse = FeatureCollection<
   MultiPolygon,
   BoatRampProperties
->;
+> & {
+  id: string;
+};
 
 export interface BoatRampProperties {
   add_improv: unknown | null;

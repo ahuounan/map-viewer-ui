@@ -7,23 +7,22 @@ import { scaleBand, scaleLinear } from '@visx/scale';
 import { Bar } from '@visx/shape';
 import { Text } from '@visx/text';
 
-export type Props = {
+export type Props<M> = {
   width: number;
   height: number;
-  data: Array<Item> | null;
+  data: BarChartItem<M>[] | null;
+  onBarClick?: (metadata: M) => void;
 };
 
-type Item = {
+export type BarChartItem<M> = {
   label: string;
   value: number;
   key: string;
+  metadata: M;
 };
 
-const getKey = (item: Item) => item.key;
-const getValue = (item: Item) => item.value;
-
-export function BarChart(props: Props): JSX.Element | null {
-  const { width, height, data } = props;
+export function BarChart<M>(props: Props<M>): JSX.Element | null {
+  const { onBarClick, width, height, data } = props;
   const topMargin = 25;
   const axisHeight = 60;
   const xMax = width;
@@ -49,6 +48,17 @@ export function BarChart(props: Props): JSX.Element | null {
     [yMax, data]
   );
 
+  const xBandWidth = xScale.bandwidth();
+  const tickLabelProps = React.useCallback(
+    () => ({
+      fontSize: 11,
+      textAnchor: 'middle' as const,
+      verticalAnchor: 'start' as const,
+      width: xBandWidth,
+    }),
+    [xBandWidth]
+  );
+
   return !data ? (
     <Placeholder width={width} height={height} />
   ) : (
@@ -56,13 +66,28 @@ export function BarChart(props: Props): JSX.Element | null {
       <Group top={topMargin}>
         {data.map(d => {
           const key = getKey(d);
-          const barWidth = xScale.bandwidth();
+          const barWidth = xBandWidth;
           const barHeight = yMax - (yScale(getValue(d)) ?? 0);
           const barX = xScale(key);
           const barY = yMax - barHeight;
           return (
             <React.Fragment key={`bar-${key}`}>
-              <Bar x={barX} y={barY} width={barWidth} height={barHeight} />
+              <Bar
+                tabIndex={0}
+                x={barX}
+                y={barY}
+                width={barWidth}
+                height={barHeight}
+                className={styles.bar}
+                onClick={onBarClick ? () => onBarClick(d.metadata) : undefined}
+                onKeyUp={
+                  onBarClick
+                    ? e =>
+                        e.code === 'Space' ||
+                        (e.code === 'Enter' && onBarClick(d.metadata))
+                    : undefined
+                }
+              />
               <Text
                 x={(barX ?? 0) + barWidth / 2}
                 y={barY}
@@ -83,19 +108,18 @@ export function BarChart(props: Props): JSX.Element | null {
         scale={xScale}
         hideAxisLine
         hideTicks
-        tickLabelProps={() => ({
-          fontSize: 11,
-          textAnchor: 'middle',
-          verticalAnchor: 'start',
-          width: xScale.bandwidth(),
-        })}
+        tickLabelProps={tickLabelProps}
       />
     </svg>
   );
 }
 
+const getKey = (item: BarChartItem<unknown>) => item.key;
+const getValue = (item: BarChartItem<unknown>) => item.value;
+
 const styles = {
   container: clsx('bg-gray-100'),
+  bar: clsx('cursor-pointer'),
 };
 
 interface PlaceholderProps {
