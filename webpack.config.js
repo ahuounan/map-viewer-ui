@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
+const Dotenv = require('dotenv-webpack');
 const path = require('path');
 
 module.exports = {
@@ -16,17 +17,31 @@ module.exports = {
   },
   mode: process.env.NODE_ENV,
   devtool: process.env.NODE_ENV === 'development' ? 'source-map' : false,
+  devServer: {
+    hot: true,
+  },
   module: {
     rules: [
       {
         test: /\.(js|jsx|ts|tsx)$/,
-        use: 'babel-loader',
+        use: [
+          {
+            loader: 'babel-loader',
+            options: { cacheDirectory: true },
+          },
+        ],
         exclude: /node_modules/,
       },
       {
         test: /\.css$/,
         include: [/src/, /libs/, /node_modules\/mapbox-gl/],
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'postcss-loader'],
+        use: [
+          process.env.NODE_ENV === 'production'
+            ? MiniCssExtractPlugin.loader
+            : 'style-loader',
+          'css-loader',
+          'postcss-loader',
+        ],
       },
     ],
   },
@@ -36,6 +51,7 @@ module.exports = {
   },
   optimization: {
     minimize: process.env.NODE_ENV === 'production',
+    runtimeChunk: process.env.NODE_ENV === 'development',
     splitChunks:
       process.env.NODE_ENV === 'production'
         ? {
@@ -76,7 +92,7 @@ module.exports = {
               },
             },
           }
-        : undefined,
+        : false,
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -84,12 +100,13 @@ module.exports = {
       inject: true,
       scriptLoading: 'defer',
     }),
-    new MiniCssExtractPlugin({
-      filename: '[name].bundle.css',
-      chunkFilename: '[id].css',
-    }),
+    new Dotenv(),
     ...(process.env.NODE_ENV === 'production'
       ? [
+          new MiniCssExtractPlugin({
+            filename: '[name].bundle.css',
+            chunkFilename: '[id].css',
+          }),
           new CompressionPlugin({
             test: /\.(js|css|html)(\?.*)?$/i,
             filename: '[path][base].gz',
