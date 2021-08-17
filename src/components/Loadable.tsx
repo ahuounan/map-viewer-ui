@@ -1,9 +1,11 @@
 import clsx from 'clsx';
 import * as React from 'react';
 
+import { FetchedDataError } from '@libs/redux/templates/fetched';
+
 interface Props {
   loading: boolean;
-  error: string | null;
+  error: FetchedDataError | null;
   data: unknown;
   children?: JSX.Element;
   Loader?: () => JSX.Element;
@@ -32,7 +34,7 @@ export function Loadable(props: Props): JSX.Element {
   }
 
   if (error) {
-    return <div>{error}</div>;
+    return <div>{error.message}</div>;
   }
 
   if (data) {

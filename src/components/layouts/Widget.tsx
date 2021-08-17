@@ -26,13 +26,13 @@ export function Widget(props: Props): JSX.Element {
 }
 
 const styles = {
-  container: (containerClassName?: string) =>
-    clsx('overflow-scroll', containerClassName),
+  container: (containerClassName?: string) => clsx(containerClassName),
   header: clsx('flex', 'justify-between', 'my-2'),
   headerText: clsx(),
   content: (collapsed: boolean) =>
     clsx(
-      'overflow-scroll',
+      'overflow-y-auto',
+      'bg-gray-100',
       collapsed ? 'h-0' : 'h-auto',
       collapsed ? 'opacity-0' : 'opacity-100'
     ),
