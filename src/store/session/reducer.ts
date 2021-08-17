@@ -30,8 +30,21 @@ export function sessionReducer(
         draft.token = action.payload.token;
       });
     }
+    case SessionActionTypes.FETCH_ERROR: {
+      return produce(state, (draft: SessionState) => {
+        draft.fetchStatus = 'idle';
+        draft.error = {
+          code: action.payload.code,
+          message: errorCodeMessageMap[action.payload.code],
+        };
+      });
+    }
     default: {
       return state;
     }
   }
 }
+
+const errorCodeMessageMap: Record<number, string> = {
+  401: 'Incorrect password, please try again.',
+};

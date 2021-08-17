@@ -1,26 +1,44 @@
 import { Epic, ofType } from 'redux-observable';
-import { Observable } from 'rxjs';
+import { catchError, filter, Observable, of } from 'rxjs';
 import { ajax } from 'rxjs/ajax';
 import { map, mergeMap, takeUntil } from 'rxjs/operators';
 
-import { Action } from '@libs/redux/action';
+import { ActionWithPayload } from '@libs/redux/action';
 
-import { sessionActions, SessionActionTypes } from './actions';
+import { SessionActions, sessionActions, SessionActionTypes } from './actions';
 import { SessionFetchResponse } from './types';
 
-const url = './data/api_token.json';
+const url = process.env.API_HOST + '/auth';
 
-const fetch: Epic<Action<SessionActionTypes>> = (
-  action$: Observable<Action<SessionActionTypes>>
-) =>
+const fetch: Epic<SessionActions> = (action$: Observable<SessionActions>) =>
   action$.pipe(
-    ofType(SessionActionTypes.FETCH_REQUEST),
-    mergeMap(() =>
-      ajax.getJSON<SessionFetchResponse>(url).pipe(
-        map(response => sessionActions.fetchResponse(response)),
-        takeUntil(action$.pipe(ofType(SessionActionTypes.FETCH_CANCELED)))
-      )
+    filter(
+      (
+        action
+      ): action is ActionWithPayload<
+        SessionActionTypes.FETCH_REQUEST,
+        string
+      > => action.type === SessionActionTypes.FETCH_REQUEST
+    ),
+    mergeMap(action =>
+      ajax
+        .post<SessionFetchResponse>(url, null, {
+          Authorization:
+            'Basic ' + window.btoa(`StandardUser:${action.payload}`),
+        })
+        .pipe(
+          map(response => sessionActions.fetchResponse(response.response)),
+          takeUntil(action$.pipe(ofType(SessionActionTypes.FETCH_CANCELED))),
+          catchError(r => {
+            return of(
+              sessionActions.fetchError({
+                code: r.status,
+                message: r.message,
+              })
+            );
+          })
+        )
     )
   );
 
-export const sessionEpics: Epic<Action<SessionActionTypes>>[] = [fetch];
+export const sessionEpics: Epic<SessionActions>[] = [fetch];

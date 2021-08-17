@@ -5,4 +5,7 @@ export interface FetchedDataState {
   error: FetchedDataError | null;
 }
 
-export type FetchedDataError = string;
+export type FetchedDataError = {
+  code: number;
+  message: string;
+};
