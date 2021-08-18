@@ -109,7 +109,7 @@ module.exports = {
           }),
           new CompressionPlugin({
             test: /\.(js|css|html)(\?.*)?$/i,
-            filename: '[path][base].gz',
+            filename: '[path][base]',
             deleteOriginalAssets: true,
           }),
         ]
