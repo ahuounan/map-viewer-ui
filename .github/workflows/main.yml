@@ -16,7 +16,7 @@ jobs:
 
       - run: npm ci
 
-      run: |
+      - run: |
           touch .env
           echo API_HOST=${{ secrets.API_HOST }} >> .env
           cat .env
