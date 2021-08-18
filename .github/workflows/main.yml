@@ -15,6 +15,12 @@ jobs:
           cache: 'npm'
 
       - run: npm ci
+
+      run: |
+          touch .env
+          echo API_HOST=${{ secrets.API_HOST }} >> .env
+          cat .env
+
       - run: npm run build
 
       - uses: jakejarvis/s3-sync-action@master
@@ -25,4 +31,4 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'eu-west-2'
-          SOURCE_DIR: 'out'
+          SOURCE_DIR: 'dist'
