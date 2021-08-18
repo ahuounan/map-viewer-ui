@@ -13,10 +13,10 @@ export function Main(): JSX.Element {
     <FullScreen>
       <BoatRampMap />
       <Overlay>
-        <Widget containerClassName={styles.widget} header="Ramps By Material">
+        <Widget containerClassName={styles.widget} header="Ramps By Area">
           <RampsBy type={FilterType.AREA} />
         </Widget>
-        <Widget containerClassName={styles.widget} header="Ramps By Size">
+        <Widget containerClassName={styles.widget} header="Ramps By Material">
           <RampsBy type={FilterType.MATERIAL} />
         </Widget>
       </Overlay>
