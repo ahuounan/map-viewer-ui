@@ -15,12 +15,15 @@ To run this locally, you will need to also run the api simultaneously. Check the
 
 ## Tech Stack
 
-Language: Typescript
-Framework: React/Redux
-Middleware: redux-observables
-Styling: Tailwind CSS
-Map Lib: mapbox-gl
-Charting Lib: visx
+- Language: Typescript
+- Framework: React/Redux
+- Middleware: redux-observables
+- Styling: Tailwind CSS
+- Map Lib: mapbox-gl
+- Charting Lib: visx
+- Toolchain: webpack/babel
+- Lint/Formatting: eslint/prettier
+- Testing: jest/react-testing-library
 
 ## To-Do
 
