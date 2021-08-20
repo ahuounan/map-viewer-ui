@@ -13,7 +13,7 @@ export function FilterPills(props: Props): JSX.Element {
   const { filters, onPillClick } = props;
 
   return (
-    <div className={styles.container}>
+    <div data-testid="filter-pills" className={styles.container}>
       {filters.length ? (
         filters.map(filter => (
           <FilterPill key={filter.key} onClick={onPillClick} filter={filter} />

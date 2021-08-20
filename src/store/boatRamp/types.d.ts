@@ -14,9 +14,7 @@ export type BoatRampFeature = Feature<Point, BoatRampProperties> & {
 export type BoatRampFetchResponse = FeatureCollection<
   MultiPolygon,
   BoatRampProperties
-> & {
-  id: string;
-};
+>;
 
 export interface BoatRampProperties {
   add_improv: unknown | null;

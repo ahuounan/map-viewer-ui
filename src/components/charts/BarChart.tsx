@@ -62,7 +62,12 @@ export function BarChart<M>(props: Props<M>): JSX.Element | null {
   return !data ? (
     <Placeholder width={width} height={height} />
   ) : (
-    <svg width={width} height={height} className={styles.container}>
+    <svg
+      data-testid="barchart"
+      width={width}
+      height={height}
+      className={styles.container}
+    >
       <Group top={topMargin}>
         {data.map(d => {
           const key = getKey(d);
@@ -73,6 +78,7 @@ export function BarChart<M>(props: Props<M>): JSX.Element | null {
           return (
             <React.Fragment key={`bar-${key}`}>
               <Bar
+                data-testid="barchart-bar"
                 tabIndex={0}
                 x={barX}
                 y={barY}

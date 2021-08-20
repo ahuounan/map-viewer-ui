@@ -35,7 +35,7 @@ export function sessionReducer(
         draft.fetchStatus = 'idle';
         draft.error = {
           code: action.payload.code,
-          message: errorCodeMessageMap[action.payload.code],
+          message: action.payload.message,
         };
       });
     }
@@ -44,7 +44,3 @@ export function sessionReducer(
     }
   }
 }
-
-const errorCodeMessageMap: Record<number, string> = {
-  401: 'Incorrect password, please try again.',
-};

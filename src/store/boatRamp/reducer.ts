@@ -19,17 +19,20 @@ export function boatRampReducer(
     case BoatRampActionTypes.FETCH_REQUEST: {
       return produce(state, (draft: BoatRampState) => {
         draft.fetchStatus = 'fetching';
+        draft.error = null;
       });
     }
     case BoatRampActionTypes.FETCH_CANCELED: {
       return produce(state, (draft: BoatRampState) => {
         draft.fetchStatus = 'idle';
+        draft.error = null;
       });
     }
     case BoatRampActionTypes.FETCH_RESPONSE: {
       return produce(state, (draft: BoatRampState) => {
         const { ids, entities } = normalize(action.payload);
         draft.fetchStatus = 'idle';
+        draft.error = null;
         draft.ids = ids;
         draft.entities = entities;
       });

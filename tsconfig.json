@@ -2,6 +2,7 @@
   "compilerOptions": {
     "noEmit": true,
     "strict": true,
+    "noUnusedLocals": true,
     "jsx": "preserve",
     "esModuleInterop": true,
     "baseUrl": ".",
