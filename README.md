@@ -28,6 +28,7 @@ Charting Lib: visx
 - More jest testing
 - Storybook for chart components
 - Depending on requirements, generalize Map component and boatRamp reducer
+- Improve mobile responsiveness, esp of chart widgets
 
 ## Notes
 
