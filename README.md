@@ -8,7 +8,7 @@ Front end of map webapp to view boat ramps. The backend of this project can be f
 
 To run this locally, you will need to also run the api simultaneously. Check the ![backend repo](https://github.com/ahuounan/map-viewer-api) for instructions.
 
-1. Clone the repo
+1. Fork and clone the repo
 2. npm i
 3. Set up your .env file from the .env-template
 4. npm start
