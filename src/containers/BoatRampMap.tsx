@@ -1,4 +1,3 @@
-import clsx from 'clsx';
 import { Feature } from 'geojson';
 import isEqual from 'lodash.isequal';
 import React from 'react';

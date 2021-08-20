@@ -20,10 +20,16 @@ export function LoginForm(): JSX.Element {
     },
     [dispatch, input]
   );
+
   return (
     <div className={styles.container}>
-      <form className={styles.form} onSubmit={handleSubmit}>
+      <form
+        data-testid="login-form"
+        className={styles.form}
+        onSubmit={handleSubmit}
+      >
         <input
+          data-testid="login-password"
           className={styles.text}
           type="password"
           placeholder="Enter password"
@@ -31,12 +37,15 @@ export function LoginForm(): JSX.Element {
           onChange={e => setInput(e.target.value)}
         />
         <input
+          data-testid="login-submit"
           className={styles.submit}
           type="submit"
           disabled={status === 'fetching'}
         />
       </form>
-      <div className={styles.error}>{error ? error.message : ''}</div>
+      <div data-testid="login-error" className={styles.error}>
+        {error ? error.message : ''}
+      </div>
     </div>
   );
 }

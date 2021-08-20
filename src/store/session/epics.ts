@@ -29,14 +29,14 @@ const fetch: Epic<SessionActions> = (action$: Observable<SessionActions>) =>
         .pipe(
           map(response => sessionActions.fetchResponse(response.response)),
           takeUntil(action$.pipe(ofType(SessionActionTypes.FETCH_CANCELED))),
-          catchError(r => {
-            return of(
+          catchError(r =>
+            of(
               sessionActions.fetchError({
-                code: r.status,
-                message: r.message,
+                code: r.xhr.status,
+                message: r.xhr.statusText,
               })
-            );
-          })
+            )
+          )
         )
     )
   );
