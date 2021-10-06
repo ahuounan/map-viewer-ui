@@ -15,7 +15,7 @@
     "@visx/scale": "1.14.0",
     "@visx/shape": "1.17.1",
     "clsx": "1.1.1",
-    "immer": "9.0.5",
+    "immer": "9.0.6",
     "lodash.flatten": "4.4.0",
     "lodash.isequal": "4.5.0",
     "lodash.uniq": "4.5.0",
