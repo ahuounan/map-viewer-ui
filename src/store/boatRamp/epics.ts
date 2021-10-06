@@ -13,7 +13,7 @@ import {
 } from './actions';
 import { BoatRampFetchResponse } from './types';
 
-const url = '/data/boat-ramps';
+const url = '/map-viewer/data/boat-ramps';
 
 const fetch: Epic<BoatRampActions> = (
   action$: Observable<BoatRampActions>,

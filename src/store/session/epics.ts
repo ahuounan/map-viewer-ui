@@ -8,7 +8,7 @@ import { ActionWithPayload } from '@libs/redux/action';
 import { SessionActions, sessionActions, SessionActionTypes } from './actions';
 import { SessionFetchResponse } from './types';
 
-const url = '/auth';
+const url = '/map-viewer/auth';
 
 const fetch: Epic<SessionActions> = (action$: Observable<SessionActions>) =>
   action$.pipe(
