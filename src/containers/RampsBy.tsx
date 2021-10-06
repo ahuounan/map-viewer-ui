@@ -50,8 +50,8 @@ export function RampsBy(props: Props): JSX.Element {
       <div className={styles.chartContainer}>
         <BarChart
           data={data}
-          height={300}
-          width={425}
+          height={150}
+          width={300}
           onBarClick={handleClick}
         />
       </div>

@@ -26,8 +26,8 @@ export function Main(): JSX.Element {
 
 const styles = {
   widget: clsx(
-    'w-450px',
-    'm-2',
+    'w-275px',
+    'mb-2',
     'inline',
     'shadow-sm',
     'rounded',
